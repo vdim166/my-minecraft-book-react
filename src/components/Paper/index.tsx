@@ -25,6 +25,8 @@ export const Paper = ({
 
   const [x, setX] = useState<number | null>(null);
 
+  const [tempIndexBack, setTempIndexBack] = useState(false);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!x) return;
@@ -44,22 +46,38 @@ export const Paper = ({
 
       result = result > 180 ? 180 : result;
       setDegrees(-result);
+
+      document.body.style.cursor = "grab";
     };
 
     const handleMouseUp = (e: MouseEvent) => {
       if (isAddListener?.type === "FRONT") {
-        if (flippedFn && degrees === -180) {
-          flippedFn();
+        if (degrees < -180 / 2) {
+          setDegrees(-180);
+
+          if (flippedFn) {
+            flippedFn();
+          }
+        } else {
+          setDegrees(0);
         }
       }
 
       if (isAddListener?.type === "BACK") {
-        if (flippedBackFn && degrees === 0) {
-          flippedBackFn();
+        if (degrees > -180 / 2) {
+          setDegrees(0);
+
+          if (flippedBackFn) {
+            flippedBackFn();
+          }
+        } else {
+          setDegrees(-180);
         }
       }
 
       setIsAddListener(null);
+      setTempIndexBack(false);
+      document.body.style.cursor = "auto";
     };
 
     if (isAddListener !== null) {
@@ -75,9 +93,9 @@ export const Paper = ({
 
   return (
     <div
-      className={`paper `}
+      className="paper"
       style={{
-        zIndex,
+        zIndex: tempIndexBack ? 51 : zIndex,
       }}
     >
       <div
@@ -89,12 +107,19 @@ export const Paper = ({
               }
             : {}
         }
-        onMouseDown={(e) => {
-          setX(e.clientX);
-          setIsAddListener({ type: "FRONT" });
-        }}
       >
         <div className="front-content">{frontContent}</div>
+
+        <div
+          onMouseDown={(e) => {
+            setX(e.clientX);
+            setIsAddListener({ type: "FRONT" });
+          }}
+          className="front-grab-end"
+        >
+          <div className="edge"></div>
+          <div className="other-page-end"></div>
+        </div>
       </div>
       <div
         className="back"
@@ -105,12 +130,21 @@ export const Paper = ({
               }
             : {}
         }
-        onMouseDown={(e) => {
-          setX(e.clientX);
-          setIsAddListener({ type: "BACK" });
-        }}
       >
         <div className="back-content">{backContent}</div>
+
+        <div
+          onMouseDown={(e) => {
+            setX(e.clientX);
+            setIsAddListener({ type: "BACK" });
+
+            setTempIndexBack(true);
+          }}
+          className="back-grab-end"
+        >
+          <div className="edge"></div>
+          <div className="other-page-end"></div>
+        </div>
       </div>
     </div>
   );

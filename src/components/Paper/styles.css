@@ -10,7 +10,6 @@
 
 .front,
 .back {
-  background-color: white;
   position: absolute;
 
   top: 0;
@@ -25,11 +24,12 @@
 .front {
   z-index: 1;
   backface-visibility: hidden;
+  /* border: 1px solid black; */
 }
 
 .back {
   z-index: 0;
-  border-left: 2px solid black;
+  /* border: 1px solid black; */
 }
 
 .flipped .front,
@@ -44,8 +44,38 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
 }
 
 .back-content {
   transform: rotateY(180deg);
+}
+
+.front,
+.back {
+  display: flex;
+}
+
+.back-grab-end,
+.front-grab-end {
+  width: 15%;
+  height: 100%;
+  position: relative;
+}
+
+.front-grab-end:hover {
+  cursor: grab;
+}
+
+.back-grab-end:hover {
+  cursor: grab;
+}
+
+.edge {
+  height: 8%;
+  background-color: white;
+}
+.other-page-end {
+  background-color: white;
+  height: 92%;
 }
