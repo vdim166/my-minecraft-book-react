@@ -1,23 +1,21 @@
 import { useEffect, useState, type ReactNode } from "react";
 import "./styles.css";
 
-type PaperProps = {
+type CoverProps = {
   frontContent: ReactNode;
   backContent: ReactNode;
   zIndex: number;
   flippedFn?: () => void;
   flippedBackFn?: () => void;
-  shouldHideBackEdge?: boolean;
 };
 
-export const Paper = ({
-  frontContent,
+export const Cover = ({
   backContent,
+  frontContent,
   zIndex,
-  flippedFn,
   flippedBackFn,
-  shouldHideBackEdge,
-}: PaperProps) => {
+  flippedFn,
+}: CoverProps) => {
   const [isAddListener, setIsAddListener] = useState<{
     type: "FRONT" | "BACK";
   } | null>(null);
@@ -92,7 +90,7 @@ export const Paper = ({
 
   return (
     <div
-      className="paper"
+      className="cover"
       style={{
         zIndex: tempIndexBack ? 51 : zIndex,
       }}
@@ -106,20 +104,16 @@ export const Paper = ({
               }
             : {}
         }
+        onMouseDown={(e) => {
+          setX(e.clientX);
+          setIsAddListener({ type: "FRONT" });
+        }}
       >
-        <div className="front-content">
-          <div className="front-content-inner">{frontContent}</div>
-        </div>
-
-        <div
-          onMouseDown={(e) => {
-            setX(e.clientX);
-            setIsAddListener({ type: "FRONT" });
-          }}
-          className={`front-grab-end ${isAddListener?.type === "FRONT" ? "folding-effect" : ""} ${isAddListener?.type === "BACK" ? "folding-effect-back" : ""}`}
-        >
-          <div className="edge"></div>
-          <div className="other-page-end"></div>
+        <div className="front-content">{frontContent}</div>
+        <div className="cover-end-container">
+          <div className="cover-edge-start"></div>
+          <div className="cover-edge-middle"></div>
+          <div className="cover-edge-end"></div>
         </div>
       </div>
       <div
@@ -131,25 +125,18 @@ export const Paper = ({
               }
             : {}
         }
+        onMouseDown={(e) => {
+          setX(e.clientX);
+          setIsAddListener({ type: "BACK" });
+
+          setTempIndexBack(true);
+        }}
       >
-        <div className="back-content">
-          <div className="back-content-inner">{backContent}</div>
-        </div>
-
-        <div
-          onMouseDown={(e) => {
-            setX(e.clientX);
-            setIsAddListener({ type: "BACK" });
-
-            setTempIndexBack(true);
-          }}
-          className={`back-grab-end ${isAddListener?.type === "BACK" ? "folding-effect" : ""} ${isAddListener?.type === "FRONT" ? "folding-effect-back" : ""}`}
-        >
-          <div
-            className="edge"
-            style={shouldHideBackEdge ? { backgroundColor: "transparent" } : {}}
-          ></div>
-          <div className="other-page-end"></div>
+        <div className="back-content">{backContent}</div>
+        <div className="cover-end-container">
+          <div className="cover-edge-start"></div>
+          <div className="cover-edge-middle"></div>
+          <div className="cover-edge-end"></div>
         </div>
       </div>
     </div>
