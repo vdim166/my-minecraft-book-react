@@ -70,6 +70,14 @@
   align-items: center;
 }
 
+.front-content-inner .paper-content-textarea-container {
+  padding-right: 23px;
+}
+
+.back-content-inner .paper-content-textarea-container {
+  padding-left: 23px;
+}
+
 .back-content-inner {
   transform: translateX(-22px);
   width: 100%;

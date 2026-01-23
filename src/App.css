@@ -8,8 +8,13 @@
   /* background-color: aqua; */
 
   background-image: url("background.jpg");
+
+  gap: 50px;
 }
 
-.book-container {
-  transform: translateX(182px);
+.initial-text {
+  color: white;
+  font-size: 30px;
+
+  width: 225px;
 }

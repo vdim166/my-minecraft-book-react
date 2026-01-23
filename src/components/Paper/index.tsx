@@ -8,6 +8,8 @@ type PaperProps = {
   flippedFn?: () => void;
   flippedBackFn?: () => void;
   shouldHideBackEdge?: boolean;
+
+  scrollTo: boolean;
 };
 
 export const Paper = ({
@@ -17,6 +19,7 @@ export const Paper = ({
   flippedFn,
   flippedBackFn,
   shouldHideBackEdge,
+  scrollTo,
 }: PaperProps) => {
   const [isAddListener, setIsAddListener] = useState<{
     type: "FRONT" | "BACK";
@@ -89,6 +92,14 @@ export const Paper = ({
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isAddListener, x, degrees]);
+
+  useEffect(() => {
+    if (scrollTo !== false) {
+      setDegrees(-180);
+
+      return;
+    }
+  }, [scrollTo]);
 
   return (
     <div

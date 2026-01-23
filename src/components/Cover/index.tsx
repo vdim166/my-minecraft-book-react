@@ -2,11 +2,13 @@ import { useEffect, useState, type ReactNode } from "react";
 import "./styles.css";
 
 type CoverProps = {
-  frontContent: ReactNode;
-  backContent: ReactNode;
+  frontContent?: ReactNode;
+  backContent?: ReactNode;
   zIndex: number;
   flippedFn?: () => void;
   flippedBackFn?: () => void;
+
+  scrollTo: boolean;
 };
 
 export const Cover = ({
@@ -15,6 +17,7 @@ export const Cover = ({
   zIndex,
   flippedBackFn,
   flippedFn,
+  scrollTo,
 }: CoverProps) => {
   const [isAddListener, setIsAddListener] = useState<{
     type: "FRONT" | "BACK";
@@ -87,6 +90,16 @@ export const Cover = ({
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isAddListener, x, degrees]);
+
+  useEffect(() => {
+    if (scrollTo !== false) {
+      console.log("scrollTo", scrollTo);
+
+      setDegrees(-180);
+
+      return;
+    }
+  }, [scrollTo]);
 
   return (
     <div

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Paper } from "../Paper";
 import "./styles.css";
 import { Cover } from "../Cover";
@@ -26,6 +26,14 @@ export const Book = () => {
     "",
   ]);
 
+  const [scrollTo, setScrollTo] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
+
   const setContentByIndex = (index: number, value: string) => {
     setPaperContent((prev) => {
       const newState = [...prev];
@@ -34,12 +42,61 @@ export const Book = () => {
     });
   };
 
+  const nextPageHandle = (
+    letter: string,
+    index: number,
+    paperIndex: number,
+  ) => {
+    setPaperContent((prev) => {
+      const newState = [...prev];
+
+      newState[index] = `${letter}${newState[index]}`;
+
+      return newState;
+    });
+
+    const pageToScroll = Math.ceil((paperIndex + 1) / 2);
+
+    if (currentPaper !== pageToScroll) {
+      setCurrentPaper(pageToScroll);
+      setScrollTo((prev) => {
+        const newState = [...prev];
+
+        for (let i = 0; i < pageToScroll; ++i) {
+          newState[i] = true;
+        }
+
+        return newState;
+      });
+    }
+  };
+
+  useEffect(() => {
+    const index = scrollTo.findIndex((item) => item === true);
+
+    if (index !== -1) {
+      setScrollTo([false, false, false, false, false]);
+    }
+  }, [scrollTo]);
+
+  // test section
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setCurrentPaper(3);
+  //     setScrollTo((prev) => {
+  //       const newState = [...prev];
+  //       newState[0] = true;
+  //       newState[1] = true;
+  //       newState[2] = true;
+  //       return newState;
+  //     });
+  //   }, 1000);
+  // }, []);
+
   return (
     <>
       <div className="book">
         <Cover
-          frontContent=""
-          backContent=""
           zIndex={calcZIndex(0, 5)}
           flippedFn={() => {
             setCurrentPaper(1);
@@ -47,6 +104,7 @@ export const Book = () => {
           flippedBackFn={() => {
             setCurrentPaper(0);
           }}
+          scrollTo={scrollTo[0]}
         />
 
         <Paper
@@ -57,13 +115,7 @@ export const Book = () => {
               content={paperContent[0]}
               setContent={(value) => setContentByIndex(0, value)}
               nextPageHandle={(letter) => {
-                setPaperContent((prev) => {
-                  const newState = [...prev];
-
-                  newState[1] = `${letter}${newState[1]}`;
-
-                  return newState;
-                });
+                nextPageHandle(letter, 1, 2);
               }}
             />
           }
@@ -74,16 +126,11 @@ export const Book = () => {
               content={paperContent[1]}
               setContent={(value) => setContentByIndex(1, value)}
               nextPageHandle={(letter) => {
-                setPaperContent((prev) => {
-                  const newState = [...prev];
-
-                  newState[2] = `${letter}${newState[2]}`;
-
-                  return newState;
-                });
+                nextPageHandle(letter, 2, 3);
               }}
             />
           }
+          scrollTo={scrollTo[1]}
           zIndex={calcZIndex(1, 4)}
           flippedFn={() => {
             setCurrentPaper(2);
@@ -102,13 +149,7 @@ export const Book = () => {
               content={paperContent[2]}
               setContent={(value) => setContentByIndex(2, value)}
               nextPageHandle={(letter) => {
-                setPaperContent((prev) => {
-                  const newState = [...prev];
-
-                  newState[3] = `${letter}${newState[3]}`;
-
-                  return newState;
-                });
+                nextPageHandle(letter, 3, 4);
               }}
             />
           }
@@ -119,16 +160,11 @@ export const Book = () => {
               content={paperContent[3]}
               setContent={(value) => setContentByIndex(3, value)}
               nextPageHandle={(letter) => {
-                setPaperContent((prev) => {
-                  const newState = [...prev];
-
-                  newState[4] = `${letter}${newState[4]}`;
-
-                  return newState;
-                });
+                nextPageHandle(letter, 4, 5);
               }}
             />
           }
+          scrollTo={scrollTo[2]}
           zIndex={calcZIndex(2, 3)}
           flippedFn={() => {
             setCurrentPaper(3);
@@ -147,13 +183,7 @@ export const Book = () => {
               content={paperContent[4]}
               setContent={(value) => setContentByIndex(4, value)}
               nextPageHandle={(letter) => {
-                setPaperContent((prev) => {
-                  const newState = [...prev];
-
-                  newState[5] = `${letter}${newState[5]}`;
-
-                  return newState;
-                });
+                nextPageHandle(letter, 5, 6);
               }}
             />
           }
@@ -164,16 +194,11 @@ export const Book = () => {
               content={paperContent[5]}
               setContent={(value) => setContentByIndex(5, value)}
               nextPageHandle={(letter) => {
-                setPaperContent((prev) => {
-                  const newState = [...prev];
-
-                  newState[6] = `${letter}${newState[6]}`;
-
-                  return newState;
-                });
+                nextPageHandle(letter, 6, 7);
               }}
             />
           }
+          scrollTo={scrollTo[3]}
           zIndex={calcZIndex(3, 2)}
           flippedFn={() => {
             setCurrentPaper(4);
@@ -184,8 +209,7 @@ export const Book = () => {
           shouldHideBackEdge={currentPaper === 3}
         />
         <Cover
-          frontContent=""
-          backContent=""
+          scrollTo={scrollTo[4]}
           zIndex={calcZIndex(4, 1)}
           flippedFn={() => {
             setCurrentPaper(5);
